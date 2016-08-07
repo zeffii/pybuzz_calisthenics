@@ -42,6 +42,13 @@ def random_choice(items):
 
 
 def utrk9p(trk=0, offset=None, note=None, smp=None, vol=None, pan=None, p1=None, p1val=None, p2=None, p2val=None):
+    ''' 
+    UTRK communication function, expects assignments of:
+
+        [offset, note, sample, vol, pan, param1, param1_val, param2, param_val]
+        ....     ...   ..      ..   ..   ..      ....        ..      ....
+
+    '''
     for assignment_idx, param in enumerate([offset, note, smp, vol, pan, p1, p1val, p2, p2val]):
         if not (param is None): 
             send_pcc(assignment_idx, trk, param)
@@ -68,8 +75,12 @@ def OnTick():
             wave_idx = random_choice([5, 6, 7, 8])
             r_vol = random_choice([34,35,37,20])
             r_pan = random_choice([40, 60])
+
+            # passing parameters
+            p1 = hex_to_int(19)   # here 19 is hex '19' and int value is 25
+                                  # param 19 is log vol down, and values are XXYY, (not linear)
+                                  # XX is duration, YY is end volume
             hexval = hex_to_int(random_choice(["5000", "aa00", "2a00", "8400", "3a20"]))
-            p1 = hex_to_int(19)
             # utrk9p(trk=0, offset=None, note=65, smp=wave_idx, vol=r_vol, pan=r_pan, p1=19, p1val=None, p2=None, p2val=None)
             utrk9p(trk=0, note=65, smp=wave_idx, pan=r_pan, vol=r_vol, p1=p1, p1val=hexval)
 
